@@ -56,6 +56,11 @@ app.use(express.static(staticRoot));
 // Also serve admin.html from server folder
 app.use(express.static(path.join(__dirname)));
 
+// Root route - redirect to admin panel
+app.get('/', (req, res) => {
+  res.redirect('/admin.html');
+});
+
 // Simple health check
 app.get('/_health', (req, res) => res.send({ ok: true }));
 
