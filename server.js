@@ -46,12 +46,23 @@ app.use(helmet({
 }));
 app.use(express.json({ limit: '50kb' }));
 app.use(express.urlencoded({ extended: false }));
-app.use(cors({
-  origin: ['https://prefic-frontend-1.vercel.app', 'http://localhost:3000', 'http://localhost:5173'],
+
+// CORS configuration with explicit origin matching
+const corsOptions = {
+  origin: function (origin, callback) {
+    const allowedOrigins = ['https://prefic-frontend-1.vercel.app', 'http://localhost:3000', 'http://localhost:5173'];
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type']
-}));
+  allowedHeaders: ['Content-Type'],
+  optionsSuccessStatus: 200
+};
+app.use(cors(corsOptions));
 app.use(morgan('tiny'));
 
 // Serve project static files (for local development). This lets you open the site via the server
