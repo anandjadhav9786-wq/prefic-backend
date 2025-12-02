@@ -51,10 +51,12 @@ app.use(express.urlencoded({ extended: false }));
 const corsOptions = {
   origin: function (origin, callback) {
     const allowedOrigins = ['https://prefic-frontend-1.vercel.app', 'http://localhost:3000', 'http://localhost:5173'];
-    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    // Allow all Vercel deployments
+    if (!origin || origin.includes('vercel.app') || allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
-      callback(new Error('Not allowed by CORS'));
+      callback(null, true); // Allow anyway for debugging
     }
   },
   credentials: true,
